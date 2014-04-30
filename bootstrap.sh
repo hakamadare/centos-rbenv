@@ -1,8 +1,14 @@
 #!/bin/bash
+echo '*** Install rubygems ***'
 yum -y install rubygems 2>/dev/null || true
 
-if [[ ! $(gem list r10k) ]]; then
-  gem install r10k
+echo '*** Install bundler ***'
+if [[ ! $(gem list bundler) ]]; then
+  gem install --no-document bundler
 fi
 
-PUPPETFILE=./Puppetfile PUPPETFILE_DIR=/vagrant/modules r10k --verbose 3 puppetfile install
+echo '*** Install gems ***'
+bundle install
+
+echo '*** Install Puppet modules ***'
+PUPPETFILE=/vagrant/Puppetfile PUPPETFILE_DIR=/vagrant/modules bundle exec r10k --verbose 3 puppetfile install
